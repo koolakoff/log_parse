@@ -82,9 +82,9 @@ args = args_parser.parse_args()
 
 # config parser
 def parse_devname(line):
-   pattern = re.compile(r"[\ *.*]\ *sd[a-zA-Z]:\ (?P<devname>.*)", re.VERBOSE)
+   pattern = re.compile(r"(?P<time>\[\ *.*\])\ *sd[a-zA-Z]:\ (?P<devname>.*)", re.VERBOSE)
    match = pattern.search(line)
-   if match: return "USB storage {}".format(match.group("devname"))
+   if match: return "{} USB storage detected: {}".format(match.group("time"),match.group("devname"))
 
 #parser_usb = Parser(r"usb.*Product:\ Mass\ Storage\ Device", logline="USB detected")
 #parser_usb = Parser(parse_devname)
