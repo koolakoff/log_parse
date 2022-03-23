@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 
-# \file   parse_logs.py
-# \brief  A demo project of logs parser tool
-#
-# contain engine for parsing specified events
-# and a use case of it's usage - for tracking USB stick event detection from dmesg logs
-#
+# \file   parse_lib.py
+# \brief  engine of logs parser
 #
 #  to use the engine, just need register set of Parser objects
 #  each object shoudl represent it's own event that we want to track from logs
@@ -96,41 +92,3 @@ class Parser(object):
       pattern = re.compile(key, re.VERBOSE)
       if pattern.search(line):
          return self.result_line
-
-
-
-
-############## main body
-# first check script's arguments
-args_parser = argparse.ArgumentParser(description="parse kernel logs (dmesg) to find USB storage detection")
-args_parser.add_argument("file", help="log filename")
-args = args_parser.parse_args()
-
-
-# config log parser
-# define function that will parse out the device name
-
-# \brief handler function that search for device name in the log line
-# \params line - the log line to check
-# \return the text to print on output if log detected
-def parse_devname(line):
-   pattern = re.compile(r"(?P<time>\[\ *.*\])\ *sd[a-zA-Z]:\ (?P<devname>.*)", re.VERBOSE)
-   match = pattern.search(line)
-   if match: return "{} USB storage detected: {}".format(match.group("time"),match.group("devname"))
-
-# actually register a parser for 2 lines log
-# first line will be handled using in-built regexp
-# second line will be handled by our function
-parser_usb = Parser([r"usb.*Product:\ Mass\ Storage\ Device",parse_devname])
-
-# now go throught input file
-# TODO support run with input stream, like 'dmesg|parse_logs.py'
-filename = args.file
-with open(filename, "r", encoding='utf-8', errors='ignore') as fp:
-   line_num = 0
-   for line in fp:
-      line_num += 1
-      res = parser_usb.parse(line)
-      # if event is detected in the log - print file and line number and actual report
-      if res:
-         print ("{} +{:<3} {}".format(filename, line_num, res))

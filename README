@@ -1,8 +1,9 @@
 A demo project of logs parser tool
 
 contain 
-- engine for parsing specified events
-- an example of usage - a use case for tracking USB stick event detection from dmesg logs
+- parse_lib.py - engine for parsing specified events
+- parse_usb.py - an example of usage - a use case for tracking USB stick event detection from dmesg logs
+- log_example_1_usb - the piece of dmesg report used as a log example
 
 
 to use the engine, just need register set of Parser objects
@@ -24,3 +25,13 @@ there are 2 use cases
   some cases may be tracked in log with few lines.
   in this case it is possible to register the list of handlers (regex or external functions) 
   for each of line. The parser will print result only when each of lines from the set is catched
+  Example:
+     def parse_world(line):
+        if "world" in line: return "a Hello world event"
+     parser_usb = Parser([r"hello",parse_world])
+
+Note, when passing a line as a regexp use letter r in front of string like this
+r"some\ regexp\ line"
+the 'r' tells python to store all '\' as a symbol of '\' but not as a hash-combo
+
+Note, it is used re.VERBOSE regexp style
