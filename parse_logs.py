@@ -25,20 +25,50 @@ import argparse
 #    - Parse - check if log line carry current event
 #
 class Parser(object):
-   def __init__(self, key, logline=None):
-      self.key     = key
+   def __init__(self, key, logline=True):
       self.logline = logline
+      self.step = 0
+      # check if 'key' has valid type - str for regex, function, or list for multiple lines handling
+      if not isinstance(key, (str, types.FunctionType, list)):
+         raise TypeError ("'key' argument has unsupported type {}".format(type(key)))
+      if isinstance(key, list):
+         i = 0
+         for elem in key:
+            if not isinstance(elem, (str, types.FunctionType)):
+               raise TypeError ("key[{}] argument has unsupported type {}".format(i,type(elem)))
+            i += 1
+      self.key     = key
 
    # return line if much or None if not
    def parse(self, line):
-      if   isinstance(self.key, str):                return self.parse_single_regex(line)
-      elif isinstance(self.key, types.FunctionType): return self.key(line)
+      # first check if we work with sequence of log lines
+      if isinstance(self.key, list):
+         # we check sequence of lines so switch to handle corresponding element of sequence
+         if self.step >= len(self.key): self.step = 0
+         key = self.key[self.step]
       else:
-         print ("unsupported key")
-         return None
+         # we check one line log
+         key = self.key
+      # now actually execute log parse handler depending on key type
+      #   for 'str' (regex) call internal handler
+      #   for 'function' (external line parser) call this function
+      if   isinstance(key, str):                result = self.parse_single_regex(key, line)
+      elif isinstance(key, types.FunctionType): result = key(line)
+      else:
+         # suppose we never reach here as we checked types in constructor
+         raise TypeError ("'key' argument of {} step has unsupported type".format(self.step))
+      # handle result
+      if isinstance(self.key, list):
+         # we work with sequence of log lines, so increment line counter if current line parse success
+         if result: self.step += 1
+         # return result only if it is Last line in the logs sequence
+         if self.step < len(self.key):
+            result = None
+      return result
+         
 
-   def parse_single_regex(self, line):
-      pattern = re.compile(self.key, re.VERBOSE)
+   def parse_single_regex(self, key, line):
+      pattern = re.compile(key, re.VERBOSE)
       if pattern.search(line):
          return self.logline
 
@@ -56,8 +86,9 @@ def parse_devname(line):
    match = pattern.search(line)
    if match: return "USB storage {}".format(match.group("devname"))
 
-#parser_usb = Parser(r"usb.*Product:\ Mass\ Storage\ Device", logline="USB stick detected")
-parser_usb = Parser(parse_devname, logline="USB stick detected")
+#parser_usb = Parser(r"usb.*Product:\ Mass\ Storage\ Device", logline="USB detected")
+#parser_usb = Parser(parse_devname)
+parser_usb = Parser([r"usb.*Product:\ Mass\ Storage\ Device",parse_devname])
 
 # now go throught input file
 # TODO support run with input stream, like 'dmesg|parse_logs.py'
