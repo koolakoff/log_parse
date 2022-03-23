@@ -4,9 +4,11 @@
 # \brief  A demo project of logs parser tool
 #
 # contain engine for parsing specified events
+# and a use case of it's usage - for tracking USB stick event detection from dmesg logs
+#
 #
 #  to use the engine, just need register set of Parser objects
-#  each object shoudl represent it's own event
+#  each object shoudl represent it's own event that we want to track from logs
 #  then feed the logs lines to the Parser objects and it will return the result_line if match event or None if not
 #
 #  there are 2 use cases
@@ -129,6 +131,6 @@ with open(filename, "r", encoding='utf-8', errors='ignore') as fp:
    for line in fp:
       line_num += 1
       res = parser_usb.parse(line)
+      # if event is detected in the log - print file and line number and actual report
       if res:
          print ("{} +{:<3} {}".format(filename, line_num, res))
-
