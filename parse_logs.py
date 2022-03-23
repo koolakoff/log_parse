@@ -51,7 +51,13 @@ args_parser.add_argument("file", help="log filename")
 args = args_parser.parse_args()
 
 # config parser
-parser_usb = Parser(r"usb.*Product:\ Mass\ Storage\ Device", logline="USB stick detected")
+def parse_devname(line):
+   pattern = re.compile(r"[\ *.*]\ *sd[a-zA-Z]:\ (?P<devname>.*)", re.VERBOSE)
+   match = pattern.search(line)
+   if match: return "USB storage {}".format(match.group("devname"))
+
+#parser_usb = Parser(r"usb.*Product:\ Mass\ Storage\ Device", logline="USB stick detected")
+parser_usb = Parser(parse_devname, logline="USB stick detected")
 
 # now go throught input file
 # TODO support run with input stream, like 'dmesg|parse_logs.py'
