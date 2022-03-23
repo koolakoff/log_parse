@@ -1,0 +1,26 @@
+A demo project of logs parser tool
+
+contain 
+- engine for parsing specified events
+- an example of usage - a use case for tracking USB stick event detection from dmesg logs
+
+
+to use the engine, just need register set of Parser objects
+each object shoudl represent it's own event that we want to track from logs
+then feed the logs lines to the Parser objects and it will return the result_line if match event or None if not
+
+there are 2 use cases
+- track one line log. In scope of this use case it is possible to register
+  -- regexp that would be chedked by logs parser engine automatically
+     Example:
+     parser_usb = Parser(r"usb.*Product:\ Mass\ Storage\ Device", result_line="USB detected")
+  -- or external function handler for parsing some specific cases
+      (i.e. when needs parse some info from log line)
+     Example:
+     def parse_hello(line):
+        if "hello" in line: return "a Hello event"
+     parser_usb = Parser(parse_hello)
+- track multiple lines log. 
+  some cases may be tracked in log with few lines.
+  in this case it is possible to register the list of handlers (regex or external functions) 
+  for each of line. The parser will print result only when each of lines from the set is catched
