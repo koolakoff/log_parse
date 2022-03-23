@@ -1,0 +1,18 @@
+[  197.977372] usb 3-2: new SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+[  198.007523] usb 3-2: New USB device found, idVendor=8564, idProduct=1000, bcdDevice=11.00
+[  198.007526] usb 3-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[  198.007528] usb 3-2: Product: Mass Storage Device
+[  198.007530] usb 3-2: Manufacturer: JetFlash
+[  198.007532] usb 3-2: SerialNumber: 03E5M1BU2QVNE5RV
+[  198.023124] usb-storage 3-2:1.0: USB Mass Storage device detected
+[  198.023447] scsi host2: usb-storage 3-2:1.0
+[  198.023731] usbcore: registered new interface driver usb-storage
+[  198.025954] usbcore: registered new interface driver uas
+[  199.302987] scsi 2:0:0:0: Direct-Access     JetFlash Transcend 32GB   1100 PQ: 0 ANSI: 6
+[  199.303463] sd 2:0:0:0: Attached scsi generic sg0 type 0
+[  199.304036] sd 2:0:0:0: [sda] 61702144 512-byte logical blocks: (31.6 GB/29.4 GiB)
+[  199.304532] sd 2:0:0:0: [sda] Write Protect is off
+[  199.304535] sd 2:0:0:0: [sda] Mode Sense: 43 00 00 00
+[  199.305037] sd 2:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[  199.309030]  sda: sda1
+[  199.311410] sd 2:0:0:0: [sda] Attached SCSI removable disk
