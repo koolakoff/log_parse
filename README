@@ -5,6 +5,14 @@ contain
 - parse_usb.py - an example of usage - a use case for tracking USB stick event detection from dmesg logs
 - log_example_1_usb - the piece of dmesg report used as a log example
 
+
+Example usage:
+- insert a USB stick to Linux PC (tested only with Transcend mass storage USB stick)
+- get the kernel logs to separate file and apply parser over the file:
+   $ dmesg > log
+   $ ./parse_usb.py log
+   log_example_1_usb +17  [  199.309030] USB storage detected: sda1
+
 The parse engine supports combination of easy-to-use API and flexibility.
 Parser engine supports
 - single regexp
