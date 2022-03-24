@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 # \file   parse_lib.py
+# \author Peter Kulakov
+# \date   2022 Mar 24
 # \brief  engine of logs parser
 #
 #  to use the engine, just need register set of Parser objects

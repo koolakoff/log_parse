@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-# \file   parse_logs.py
+# \file   parse_usb.py
+# \author Peter Kulakov
+# \date   2022 Mar 24
 # \brief  an example of logs parser usage
 #
 # implements the use case - tracking USB stick event detection from dmesg logs
@@ -11,6 +13,9 @@
 # 
 # first line indicates that we've got a USB mass storage
 # second line show the /dev/ device name for this USB storage
+#
+# Usage:
+#  ./parse_usb.py <log_filename>
 
 
 import re
