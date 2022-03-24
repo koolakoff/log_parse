@@ -7,13 +7,13 @@
 #
 #  to use the engine, just need register set of Parser objects
 #  each object shoudl represent it's own event that we want to track from logs
-#  then feed the logs lines to the Parser objects and it will return the result_line if match event or None if not
+#  then feed the logs lines to the Parser objects and it will return the report_line if match event or None if not
 #
 #  there are 2 use cases
 #    - track one line log. In scope of this use case it is possible to register
 #      -- regexp that would be chedked by logs parser engine automatically
 #         Example:
-#         parser_usb = Parser(r"usb.*Product:\ Mass\ Storage\ Device", result_line="USB detected")
+#         parser_usb = Parser(r"usb.*Product:\ Mass\ Storage\ Device", report_line="USB detected")
 #      -- or external function handler for parsing some specific cases
 #          (i.e. when needs parse some info from log line)
 #         Example:
@@ -38,11 +38,11 @@ class Parser(object):
    #                 - string   - the regex to parse (uses re.VERBOSE)
    #                 - function - the external function that woudl parse a line.
    #                 - list of strings or/and functions - when multiple line logs are traced
-   # \param result_line - the optional parameter. The string to return if key detected in the log
-   #                      Note, when 'key' is an external function then result_line is ignored and
+   # \param report_line - the optional parameter. The string to return if key detected in the log
+   #                      Note, when 'key' is an external function then report_line is ignored and
    #                      result line is printed from the 'key' function return
-   def __init__(self, key, result_line=True):
-      self.result_line = result_line
+   def __init__(self, key, report_line=True):
+      self.report_line = report_line
       self.step = 0
       # check if 'key' has valid type - str for regex, function, or list for multiple lines handling
       if not isinstance(key, (str, types.FunctionType, list)):
@@ -89,8 +89,8 @@ class Parser(object):
    # \brief  a buildt-in function for parsing a single regexp
    # \params key - the regexp to catch
    # \params line - the log line to check
-   # \return None if regexp not found, or self.result_line if found
+   # \return None if regexp not found, or self.report_line if found
    def parse_single_regex(self, key, line):
       pattern = re.compile(key, re.VERBOSE)
       if pattern.search(line):
-         return self.result_line
+         return self.report_line
